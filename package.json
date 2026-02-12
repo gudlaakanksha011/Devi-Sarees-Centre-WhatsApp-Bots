@@ -2,6 +2,7 @@
   "name": "devi-sarees-whatsapp-bot",
   "version": "1.0.0",
   "main": "index.js",
+  "axios": "^1.x.x",
   "dependencies": {
     "express": "^4.18.2"
   }
