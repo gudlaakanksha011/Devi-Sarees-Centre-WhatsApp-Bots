@@ -2,6 +2,17 @@ const express = require("express");
 const app = express();
 app.use(express.json());
 
+app.get("/privacy", (req, res) => {
+  res.send(`
+    <h1>Privacy Policy - Devi Sarees Centre</h1>
+    <p>We collect customer data only for order processing and communication via WhatsApp.</p>
+    <p>We do not sell or share customer information.</p>
+    <p>All communication is secured through WhatsApp Business Platform.</p>
+    <p>Contact: +91 77948 45644</p>
+  `);
+});
+
+
 // ✅ VERIFY WEBHOOK (THIS FIXES YOUR ERROR)
 app.get("/webhook", (req, res) => {
   const VERIFY_TOKEN = process.env.VERIFY_TOKEN;
