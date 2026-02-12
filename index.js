@@ -48,12 +48,52 @@ app.post("/webhook", async (req, res) => {
     let reply =
       "🌸 Welcome to Devi Sarees Centre 🌸\n\nReply:\n1️⃣ Sarees\n2️⃣ Jewellery\n3️⃣ Order";
 
-    if (text === "1")
-      reply = "🪷 Sarees:\n• Silk\n• Catalogue\n• Party Wear\n• Trendy";
+    if (text === "1") {
+  await axios.post(
+    `https://graph.facebook.com/v24.0/${process.env.PHONE_NUMBER_ID}/messages`,
+    {
+      messaging_product: "whatsapp",
+      to: from,
+      type: "image",
+      image: {
+        link: "https://i.postimg.cc/zBtPBTn5/vibrant_color_dola_silk_sarees_260nw_2623854933.webp",
+        caption: "✨ Silk Sarees Collection ✨"
+      }
+    },
+    {
+      headers: {
+        Authorization: `Bearer ${process.env.WHATSAPP_TOKEN}`,
+        "Content-Type": "application/json"
+      }
+    }
+  );
 
-    if (text === "2")
-      reply =
-        "💍 Jewellery:\n• Bangles\n• Necklace Sets\n• Jhumkas\n• Short Neck Sets";
+  return res.sendStatus(200);
+}
+
+    if (text === "2") {
+  await axios.post(
+    `https://graph.facebook.com/v24.0/${process.env.PHONE_NUMBER_ID}/messages`,
+    {
+      messaging_product: "whatsapp",
+      to: from,
+      type: "image",
+      image: {
+        link: "https://i.postimg.cc/DZjYZ1q3/Best_Jewellery_Designs_for_Silk_Sarees.jpg",
+        caption: "💍 Jewellery Collection 💍"
+      }
+    },
+    {
+      headers: {
+        Authorization: `Bearer ${process.env.WHATSAPP_TOKEN}`,
+        "Content-Type": "application/json"
+      }
+    }
+  );
+
+  return res.sendStatus(200);
+}
+
 
     if (text === "3")
       reply = "🛍️ Please send:\nName\nAddress\nProduct Code";
