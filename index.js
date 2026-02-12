@@ -1,5 +1,6 @@
 const express = require("express");
 const app = express();
+const axios = require("axios");
 app.use(express.json());
 
 app.get("/privacy", (req, res) => {
@@ -30,23 +31,59 @@ app.get("/webhook", (req, res) => {
 });
 
 // ✅ Receive Messages
-app.post("/webhook", (req, res) => {
-  const message =
-    req.body.entry?.[0]?.changes?.[0]?.value?.messages?.[0]?.text?.body;
+app.post("/webhook", async (req, res) => {
+  try {
+    const body = req.body;
 
-  let reply =
-    "🌸 Welcome to Devi Sarees Centre 🌸\n\nReply:\n1️⃣ Sarees\n2️⃣ Jewellery\n3️⃣ Order";
+    const message =
+      body.entry?.[0]?.changes?.[0]?.value?.messages?.[0];
 
-  if (message === "1")
-    reply = "🪷 Sarees:\n• Silk\n• Catalogue\n• Party Wear\n• Trendy";
-  if (message === "2")
-    reply =
-      "💍 Jewellery:\n• Bangles\n• Necklace Sets\n• Jhumkas\n• Short Neck Sets";
-  if (message === "3")
-    reply = "🛍️ Please send:\nName\nAddress\nProduct Code";
+    if (!message) {
+      return res.sendStatus(200);
+    }
 
-  res.json({ text: { body: reply } });
+    const from = message.from;
+    const text = message.text?.body;
+
+    let reply =
+      "🌸 Welcome to Devi Sarees Centre 🌸\n\nReply:\n1️⃣ Sarees\n2️⃣ Jewellery\n3️⃣ Order";
+
+    if (text === "1")
+      reply = "🪷 Sarees:\n• Silk\n• Catalogue\n• Party Wear\n• Trendy";
+
+    if (text === "2")
+      reply =
+        "💍 Jewellery:\n• Bangles\n• Necklace Sets\n• Jhumkas\n• Short Neck Sets";
+
+    if (text === "3")
+      reply = "🛍️ Please send:\nName\nAddress\nProduct Code";
+
+    await axios.post(
+      `https://graph.facebook.com/v24.0/${process.env.PHONE_NUMBER_ID}/messages`,
+      {
+        messaging_product: "whatsapp",
+        to: from,
+        type: "text",
+        text: { body: reply }
+      },
+      {
+        headers: {
+          Authorization: `Bearer ${process.env.WHATSAPP_TOKEN}`,
+          "Content-Type": "application/json"
+        }
+      }
+    );
+
+    res.sendStatus(200);
+  } catch (error) {
+    console.error(error.response?.data || error.message);
+    res.sendStatus(500);
+  }
 });
 
+
 app.get("/", (_, res) => res.send("Bot running"));
-app.listen(3000);
+
+app.listen(process.env.PORT || 3000, () => {
+  console.log("Server running...");
+});
