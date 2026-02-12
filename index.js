@@ -56,7 +56,7 @@ app.post("/webhook", async (req, res) => {
       to: from,
       type: "image",
       image: {
-        link: "https://i.postimg.cc/QthHtTj9/images.jpg",
+        link: "https://i.postimg.cc/DZjYZ1q3/Best_Jewellery_Designs_for_Silk_Sarees.jpg"",
         caption: "✨ Silk Sarees Collection ✨"
       }
     },
